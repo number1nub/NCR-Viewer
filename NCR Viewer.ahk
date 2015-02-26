@@ -2,8 +2,13 @@
 #SingleInstance, Force
 SetWorkingDir, %A_ScriptDir%
 
-global ncrs:=[]
-ncrPath     := "\\hplynx.hpinc.com\DavWWWRoot\sites\tv\operations\OperationsNonConformance"
+if 0 > 0
+	ncrPath = %1%
+else
+	ncrPath := "\\hplynx.hpinc.com\DavWWWRoot\sites\tv\operations\OperationsNonConformance"
+
+
+global ncrs :=[]
 initFilter  := { attrib:"state", crit:"Assignment"}
 custFilters := {"Final Report Required": {attrib:"report", crit:1}, "All": {}}
 ncrs        := LoadNcrs(ncrPath)
@@ -32,8 +37,7 @@ StateSelect:
 	else
 		InsertRows(FilterNcrs("state", A_GuiControl))
 	GuiControl, % "Enable" (LV_GetNext() ? 1 : 0), btnOpenNcr
-return
-
+	return
 
 ncrList_Click:
 	if (A_GuiEvent != "DoubleClick")
@@ -41,28 +45,31 @@ ncrList_Click:
 		GuiControl, % "Enable" (LV_GetNext() ? 1 : 0), btnOpenNcr
 		return
 	}
-	buttonOpenNCR:
+
+buttonOpenNCR:
 	curRow := LV_GetNext()
 	if (!curRow)
 		return
 	LV_GetText(selID, curRow, 1)
 	OpenNcr(selID)
-return
-
+	return
 
 GuiSize:
 	Anchor(ncrListID, "wh")
 	Anchor(btnOpenNcrID, "x.5y")
-return
+	return
 
 GuiClose:
-ExitApp
+	ExitApp
 
 
-#Include LoadNcrs.ahk
+#Include anchor.ahk
+#Include filterNcrs.ahk
+#Include getNcrCount.ahk
+#Include GetNcrFileCount.ahk
+#Include insertRows.ahk
+#Include loadNcrs.ahk
 #Include m.ahk
-#Include InsertRows.ahk
-#Include GetNcrCount.ahk
-#Include Anchor.ahk
-#Include OpenNcr.ahk
-#Include FilterNcrs.ahk
+#Include openNcr.ahk
+#Include importNcrs.ahk
+#Include class Ncr.ahk
